@@ -1,0 +1,967 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Da Roda Dentada ao Silício Pensante</title>
+<meta name="description" content="Curso interativo sobre a história da computação, dos ábacos à inteligência artificial, com sistemas operativos, software livre, glossário e quiz.">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&family=Literata:opsz,wght@6..72,400;6..72,500;6..72,600;6..72,700&display=swap');
+
+:root{
+  --paper:#EDE7D9;
+  --paper-raised:#F6F2E7;
+  --ink:#1F2620;
+  --ink-soft:#4B5148;
+  --rail:#8A7757;
+  --line:#CBC0A0;
+  --accent:#B85C2C;
+  --accent-soft:#E7C9A8;
+  --accent2:#3E6B5C;
+  --accent2-soft:#CFE0D6;
+  --card-shadow: 0 1px 0 rgba(31,38,32,0.06);
+  --focus:#3E6B5C;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --paper:#181A16;
+    --paper-raised:#212420;
+    --ink:#EDE6D6;
+    --ink-soft:#B6AD97;
+    --rail:#6E6248;
+    --line:#3A3A30;
+    --accent:#E08A50;
+    --accent-soft:#3A2A1C;
+    --accent2:#7FBFA4;
+    --accent2-soft:#1E2E27;
+    --card-shadow: 0 1px 0 rgba(0,0,0,0.3);
+    --focus:#7FBFA4;
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#181A16;
+  --paper-raised:#212420;
+  --ink:#EDE6D6;
+  --ink-soft:#B6AD97;
+  --rail:#6E6248;
+  --line:#3A3A30;
+  --accent:#E08A50;
+  --accent-soft:#3A2A1C;
+  --accent2:#7FBFA4;
+  --accent2-soft:#1E2E27;
+  --card-shadow: 0 1px 0 rgba(0,0,0,0.3);
+  --focus:#7FBFA4;
+}
+
+*{box-sizing:border-box;}
+body{
+  margin:0;
+  background:var(--paper);
+  color:var(--ink);
+  font-family:'Literata',Georgia,'Times New Roman',serif;
+  line-height:1.6;
+}
+::selection{background:var(--accent-soft);color:var(--ink);}
+a{color:var(--accent2);}
+:focus-visible{outline:2px solid var(--focus);outline-offset:2px;}
+
+.mono{font-family:'IBM Plex Mono',ui-monospace,'SFMono-Regular',Menlo,monospace;}
+h1,h2,h3{font-family:'IBM Plex Mono',ui-monospace,monospace;font-weight:600;text-wrap:balance;letter-spacing:-0.01em;}
+
+/* ---------- Top masthead ---------- */
+.masthead{
+  padding:2.6rem 1.5rem 1.6rem;
+  max-width:920px;margin:0 auto;
+  border-bottom:2px solid var(--ink);
+}
+.masthead .eyebrow{
+  font-family:'IBM Plex Mono',monospace;
+  font-size:0.72rem;letter-spacing:0.14em;text-transform:uppercase;
+  color:var(--accent);font-weight:600;
+  display:flex;align-items:center;gap:0.6rem;
+}
+.masthead .eyebrow::before{content:"";width:22px;height:1px;background:var(--accent);display:inline-block;}
+.masthead h1{
+  font-size:clamp(1.8rem,4.2vw,2.9rem);
+  margin:0.5rem 0 0.4rem;
+  line-height:1.05;
+}
+.masthead p.lede{
+  font-size:1.05rem;color:var(--ink-soft);max-width:56ch;margin:0.6rem 0 0;
+}
+.masthead .meta{
+  margin-top:1.1rem;display:flex;gap:1.4rem;flex-wrap:wrap;
+  font-family:'IBM Plex Mono',monospace;font-size:0.72rem;color:var(--ink-soft);
+  letter-spacing:0.03em;
+}
+.masthead .meta b{color:var(--ink);font-weight:600;}
+
+/* ---------- Era nav (punch-card ticket strip) ---------- */
+.nav-wrap{
+  position:sticky;top:0;z-index:20;
+  background:var(--paper);
+  border-bottom:1px solid var(--line);
+}
+.nav-scroll{
+  max-width:920px;margin:0 auto;
+  display:flex;gap:0.4rem;overflow-x:auto;
+  padding:0.7rem 1.5rem;
+  scrollbar-width:thin;
+}
+.nav-scroll::-webkit-scrollbar{height:5px;}
+.nav-scroll::-webkit-scrollbar-thumb{background:var(--line);border-radius:3px;}
+.era-btn{
+  font-family:'IBM Plex Mono',monospace;
+  font-size:0.68rem;letter-spacing:0.04em;
+  white-space:nowrap;
+  background:transparent;border:1px solid var(--line);
+  color:var(--ink-soft);
+  padding:0.4rem 0.7rem;border-radius:2px;cursor:pointer;
+  transition:background .15s,color .15s,border-color .15s;
+}
+.era-btn:hover{border-color:var(--rail);color:var(--ink);}
+.era-btn.active{background:var(--ink);color:var(--paper);border-color:var(--ink);}
+
+/* ---------- Timeline spine ---------- */
+main{max-width:920px;margin:0 auto;padding:0 1.5rem 4rem;position:relative;}
+.spine{
+  position:relative;
+  margin-top:1.5rem;
+  padding-left:1.9rem;
+  border-left:2px solid var(--rail);
+}
+.era{
+  position:relative;
+  padding:2.4rem 0 0.4rem;
+  scroll-margin-top:4.2rem;
+}
+.era:first-child{padding-top:1.6rem;}
+.era::before{
+  content:attr(data-num);
+  position:absolute;left:-2.65rem;top:2.55rem;
+  width:2.1rem;height:2.1rem;
+  background:var(--paper);
+  border:2px solid var(--rail);
+  border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-family:'IBM Plex Mono',monospace;font-size:0.68rem;font-weight:600;
+  color:var(--ink-soft);
+}
+.era:first-child::before{top:1.75rem;}
+.era.in-view::before{border-color:var(--accent);color:var(--accent);}
+
+.era-head{display:flex;flex-wrap:wrap;align-items:baseline;gap:0.6rem 0.9rem;}
+.era-years{
+  font-family:'IBM Plex Mono',monospace;color:var(--accent);
+  font-size:0.85rem;font-weight:600;letter-spacing:0.02em;
+}
+.era h2{font-size:clamp(1.3rem,2.6vw,1.7rem);margin:0.15rem 0 0;flex-basis:100%;}
+.era .dek{color:var(--ink-soft);max-width:62ch;font-size:1rem;margin:0.5rem 0 1.3rem;}
+
+/* ---------- Ledger table (milestones) ---------- */
+.ledger{
+  background:var(--paper-raised);
+  border:1px solid var(--line);
+  border-radius:3px;
+  box-shadow:var(--card-shadow);
+  overflow:hidden;
+  margin:0 0 1.4rem;
+}
+.ledger-row{
+  display:grid;grid-template-columns:5.2rem 1fr;
+  border-top:1px solid var(--line);
+}
+.ledger-row:first-child{border-top:none;}
+.ledger-year{
+  font-family:'IBM Plex Mono',monospace;font-size:0.8rem;font-weight:600;
+  color:var(--accent2);padding:0.65rem 0.8rem;
+  border-right:1px dashed var(--line);
+  font-variant-numeric:tabular-nums;
+}
+.ledger-fact{padding:0.65rem 0.9rem;font-size:0.95rem;}
+.ledger-fact b{color:var(--ink);}
+
+/* ---------- Two-up: OS / Open-source callouts ---------- */
+.panel-row{display:grid;grid-template-columns:1fr;gap:1rem;margin-bottom:1.3rem;}
+@media(min-width:640px){.panel-row.two{grid-template-columns:1fr 1fr;}}
+.panel{
+  border:1px solid var(--line);border-radius:3px;padding:1rem 1.1rem;
+  background:var(--paper-raised);
+}
+.panel .tag{
+  font-family:'IBM Plex Mono',monospace;font-size:0.66rem;letter-spacing:0.1em;text-transform:uppercase;
+  color:var(--accent2);font-weight:600;
+}
+.panel h3{font-size:1rem;margin:0.35rem 0 0.45rem;}
+.panel p{margin:0;font-size:0.92rem;color:var(--ink-soft);}
+.chiplist{display:flex;flex-wrap:wrap;gap:0.4rem;margin-top:0.7rem;}
+.chip{
+  font-family:'IBM Plex Mono',monospace;font-size:0.68rem;
+  border:1px solid var(--line);border-radius:2px;padding:0.2rem 0.5rem;
+  color:var(--ink-soft);
+}
+
+/* ---------- Flashcards (glossary) ---------- */
+.cards-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:0.8rem;margin:1.6rem 0 0.4rem;}
+.flash{
+  perspective:800px;height:118px;cursor:pointer;
+}
+.flash-inner{
+  position:relative;width:100%;height:100%;
+  transition:transform .5s cubic-bezier(.2,.8,.2,1);
+  transform-style:preserve-3d;
+}
+.flash.flipped .flash-inner{transform:rotateY(180deg);}
+.flash-face{
+  position:absolute;inset:0;backface-visibility:hidden;
+  border:1px solid var(--line);border-radius:3px;
+  padding:0.8rem;display:flex;flex-direction:column;justify-content:center;
+  background:var(--paper-raised);
+}
+.flash-face.back{
+  transform:rotateY(180deg);
+  background:var(--ink);color:var(--paper);border-color:var(--ink);
+}
+.flash-face .term{font-family:'IBM Plex Mono',monospace;font-weight:600;font-size:0.85rem;color:var(--accent);}
+.flash-face .hint{font-size:0.72rem;color:var(--ink-soft);margin-top:0.3rem;font-family:'IBM Plex Mono',monospace;}
+.flash-face.back p{margin:0;font-size:0.82rem;line-height:1.45;}
+
+/* ---------- Quiz ---------- */
+#quiz{scroll-margin-top:4.2rem;padding-top:2.4rem;border-top:2px solid var(--ink);margin-top:2rem;}
+#quiz h2{font-size:1.5rem;}
+#quiz .dek{color:var(--ink-soft);max-width:60ch;}
+.q-card{
+  border:1px solid var(--line);border-radius:3px;background:var(--paper-raised);
+  padding:1rem 1.1rem;margin-bottom:0.9rem;
+}
+.q-card .q-text{font-weight:600;margin-bottom:0.7rem;font-size:0.98rem;}
+.q-opts{display:grid;gap:0.45rem;}
+.q-opt{
+  text-align:left;font-family:'Literata',serif;font-size:0.92rem;
+  border:1px solid var(--line);background:var(--paper);color:var(--ink);
+  border-radius:2px;padding:0.5rem 0.7rem;cursor:pointer;
+}
+.q-opt:hover{border-color:var(--rail);}
+.q-opt.correct{border-color:var(--accent2);background:var(--accent2-soft);}
+.q-opt.wrong{border-color:var(--accent);background:var(--accent-soft);}
+.q-opt[disabled]{cursor:default;}
+.quiz-score{
+  font-family:'IBM Plex Mono',monospace;font-size:0.9rem;
+  display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap;
+  border:1px dashed var(--rail);border-radius:3px;padding:0.8rem 1rem;margin-top:1rem;
+}
+.quiz-score button{
+  font-family:'IBM Plex Mono',monospace;font-size:0.72rem;letter-spacing:0.04em;
+  background:var(--ink);color:var(--paper);border:none;border-radius:2px;
+  padding:0.45rem 0.8rem;cursor:pointer;
+}
+
+footer{
+  max-width:920px;margin:0 auto;padding:1.6rem 1.5rem 3rem;
+  font-family:'IBM Plex Mono',monospace;font-size:0.7rem;color:var(--ink-soft);
+  border-top:1px solid var(--line);
+}
+
+@media (prefers-reduced-motion: reduce){
+  .flash-inner{transition:none;}
+}
+</style>
+</head>
+<body>
+
+<div class="masthead">
+  <div class="eyebrow">Curso interativo · Literacia digital</div>
+  <h1>Da Roda Dentada ao Silício Pensante</h1>
+  <p class="lede">Uma viagem completa pela história da computação: das primeiras máquinas de calcular às inteligências artificiais de hoje — passando pelos sistemas operativos e pelo movimento do software livre que moldaram o mundo digital.</p>
+  <div class="meta">
+    <span><b>22</b> capítulos</span>
+    <span><b>~71</b> min de leitura</span>
+    <span><b>22</b> cartões de glossário</span>
+    <span><b>20</b> perguntas de revisão</span>
+  </div>
+</div>
+
+<div class="nav-wrap">
+  <div class="nav-scroll mono" id="eraNav"></div>
+</div>
+
+<main>
+  <div class="spine" id="spine">
+
+    <section class="era" id="era-0" data-num="0" data-label="Antes da eletricidade">
+      <div class="era-head">
+        <span class="era-years">~3000 a.C. — 1830s</span>
+        <h2>Contar antes de calcular</h2>
+      </div>
+      <p class="dek">Muito antes de qualquer circuito, o ser humano já construía ferramentas para não errar as contas. É desse impulso — automatizar o cálculo — que nasce tudo o resto.</p>
+      <div class="ledger">
+        <div class="ledger-row"><div class="ledger-year">~3000 a.C.</div><div class="ledger-fact"><b>Ábaco</b> — usado na Mesopotâmia e mais tarde aperfeiçoado na China; primeira "memória externa" da humanidade para contas.</div></div>
+        <div class="ledger-row"><div class="ledger-year">1642</div><div class="ledger-fact"><b>Pascalina</b> — Blaise Pascal constrói uma calculadora mecânica de engrenagens para ajudar o pai, cobrador de impostos.</div></div>
+        <div class="ledger-row"><div class="ledger-year">1801</div><div class="ledger-fact"><b>Tear de Jacquard</b> — usa cartões perfurados para tecer padrões automaticamente; a ideia do "programa" nasce aqui.</div></div>
+        <div class="ledger-row"><div class="ledger-year">1837</div><div class="ledger-fact"><b>Máquina Analítica</b> — Charles Babbage projeta o primeiro computador mecânico de uso geral; nunca chegou a ser totalmente construído.</div></div>
+        <div class="ledger-row"><div class="ledger-year">1843</div><div class="ledger-fact"><b>Ada Lovelace</b> escreve o primeiro algoritmo destinado a ser executado por uma máquina — é considerada a primeira programadora da história.</div></div>
+      </div>
+    </section>
+
+    <section class="era" id="era-1" data-num="1" data-label="Eletromecânica">
+      <div class="era-head">
+        <span class="era-years">1890 — 1945</span>
+        <h2>Relés, cartões e a corrida da guerra</h2>
+      </div>
+      <p class="dek">O cálculo ganha eletricidade — ainda sem eletrónica. Censos, criptografia e a Segunda Guerra Mundial empurram as máquinas para a escala industrial.</p>
+      <div class="ledger">
+        <div class="ledger-row"><div class="ledger-year">1890</div><div class="ledger-fact"><b>Herman Hollerith</b> usa cartões perfurados para processar o censo dos EUA em semanas em vez de anos; a empresa que fundou dará origem à <b>IBM</b>.</div></div>
+        <div class="ledger-row"><div class="ledger-year">1941</div><div class="ledger-fact"><b>Zuse Z3</b> (Alemanha) — primeiro computador programável e totalmente automático, baseado em relés eletromecânicos.</div></div>
+        <div class="ledger-row"><div class="ledger-year">1943</div><div class="ledger-fact"><b>Colossus</b> (Reino Unido) — máquina eletrónica que ajudou a quebrar cifras alemãs em Bletchley Park, com Alan Turing.</div></div>
+        <div class="ledger-row"><div class="ledger-year">1945</div><div class="ledger-fact"><b>ENIAC</b> — primeiro computador eletrónico digital de uso geral; ocupava uma sala inteira e usava 18 mil válvulas.</div></div>
+      </div>
+    </section>
+
+    <section class="era" id="era-2" data-num="2" data-label="Válvulas e transístores">
+      <div class="era-head">
+        <span class="era-years">1947 — 1964</span>
+        <h2>Do vidro incandescente ao silício</h2>
+      </div>
+      <p class="dek">As válvulas eram enormes, quentes e falhavam constantemente. A invenção do transístor muda tudo: computadores tornam-se mais pequenos, fiáveis e baratos.</p>
+      <div class="ledger">
+        <div class="ledger-row"><div class="ledger-year">1947</div><div class="ledger-fact"><b>Transístor</b> — Bardeen, Brattain e Shockley inventam-no nos Bell Labs; substitui a válvula e vale-lhes o Nobel da Física.</div></div>
+        <div class="ledger-row"><div class="ledger-year">1951</div><div class="ledger-fact"><b>UNIVAC I</b> — primeiro computador comercial vendido nos EUA, usado para prever a eleição presidencial de 1952.</div></div>
+        <div class="ledger-row"><div class="ledger-year">1958</div><div class="ledger-fact"><b>Circuito Integrado</b> — Jack Kilby e Robert Noyce combinam vários transístores numa única pastilha de silício.</div></div>
+        <div class="ledger-row"><div class="ledger-year">1964</div><div class="ledger-fact"><b>IBM System/360</b> — família de mainframes compatíveis entre si; padroniza a computação empresarial.</div></div>
+      </div>
+    </section>
+
+    <section class="era" id="era-3" data-num="3" data-label="Microprocessador">
+      <div class="era-head">
+        <span class="era-years">1971 — 1977</span>
+        <h2>Um computador inteiro numa pastilha</h2>
+      </div>
+      <p class="dek">Quando toda a unidade de processamento cabe num único chip, o computador deixa de ser um privilégio de governos e grandes empresas.</p>
+      <div class="ledger">
+        <div class="ledger-row"><div class="ledger-year">1971</div><div class="ledger-fact"><b>Intel 4004</b> — primeiro microprocessador comercial, com 2 300 transístores.</div></div>
+        <div class="ledger-row"><div class="ledger-year">1975</div><div class="ledger-fact"><b>Altair 8800</b> — vendido em kit por correio, inspira Bill Gates e Paul Allen a fundar a <b>Microsoft</b> para lhe escrever um interpretador BASIC.</div></div>
+        <div class="ledger-row"><div class="ledger-year">1976</div><div class="ledger-fact"><b>Apple I</b> — Steve Wozniak e Steve Jobs montam-no numa garagem; nasce a Apple.</div></div>
+        <div class="ledger-row"><div class="ledger-year">1977</div><div class="ledger-fact">Trindade dos <b>"computadores pessoais prontos a usar"</b>: Apple II, Commodore PET e Tandy TRS-80 chegam às lojas no mesmo ano.</div></div>
+      </div>
+    </section>
+
+    <section class="era" id="era-4" data-num="4" data-label="O PC entra em casa">
+      <div class="era-head">
+        <span class="era-years">1981 — 1995</span>
+        <h2>O computador pessoal conquista a secretária</h2>
+      </div>
+      <p class="dek">A IBM legitima o PC, a interface gráfica torna-o acessível a qualquer pessoa e o Windows acaba por dominar a década seguinte.</p>
+      <div class="ledger">
+        <div class="ledger-row"><div class="ledger-year">1981</div><div class="ledger-fact"><b>IBM PC</b> — a arquitetura aberta permite "clones" de outras marcas; nasce o padrão que ainda hoje chamamos "PC".</div></div>
+        <div class="ledger-row"><div class="ledger-year">1984</div><div class="ledger-fact"><b>Apple Macintosh</b> — leva ao mercado de massas a interface gráfica com janelas, ícones e rato (inspirada no trabalho da Xerox PARC).</div></div>
+        <div class="ledger-row"><div class="ledger-year">1985</div><div class="ledger-fact"><b>Windows 1.0</b> — a Microsoft responde com uma camada gráfica sobre o MS-DOS.</div></div>
+        <div class="ledger-row"><div class="ledger-year">1995</div><div class="ledger-fact"><b>Windows 95</b> — menu Iniciar, barra de tarefas e plug-and-play; vende 1 milhão de cópias em 4 dias.</div></div>
+      </div>
+    </section>
+
+    <section class="era" id="era-graphics" data-num="5" data-label="Computação gráfica e jogos">
+      <div class="era-head">
+        <span class="era-years">1958 — hoje</span>
+        <h2>Ecrãs, pixels e mundos virtuais</h2>
+      </div>
+      <p class="dek">Se os capítulos anteriores contam a história de calcular, este conta a de mostrar — e de brincar. Poucos setores empurraram tanto o hardware de consumo como a vontade de desenhar mundos cada vez mais convincentes em tempo real.</p>
+      <div class="ledger">
+        <div class="ledger-row"><div class="ledger-year">1958</div><div class="ledger-fact"><b>Tennis for Two</b> — William Higinbotham cria, num osciloscópio, um dos primeiros jogos eletrónicos de que há registo, num laboratório de investigação nuclear.</div></div>
+        <div class="ledger-row"><div class="ledger-year">1972</div><div class="ledger-fact"><b>Pong</b> (Atari) e a <b>Magnavox Odyssey</b> lançam, no mesmo ano, o jogo de arcada de sucesso comercial e a primeira consola doméstica.</div></div>
+        <div class="ledger-row"><div class="ledger-year">1985</div><div class="ledger-fact">A <b>Nintendo Entertainment System</b> relança a indústria dos videojogos após o colapso do mercado norte-americano de 1983.</div></div>
+        <div class="ledger-row"><div class="ledger-year">1993</div><div class="ledger-fact"><b>DOOM</b> — a id Software populariza o "first-person shooter" em 3D e distribui o jogo como shareware, mudando também o modelo de negócio dos jogos.</div></div>
+        <div class="ledger-row"><div class="ledger-year">1999</div><div class="ledger-fact">A NVIDIA populariza o termo <b>GPU</b> (unidade de processamento gráfico) com a GeForce 256, dedicada a calcular imagens 3D em tempo real.</div></div>
+        <div class="ledger-row"><div class="ledger-year">2020–26</div><div class="ledger-fact"><b>Ray tracing</b> em tempo real, motores como Unreal e Unity, e a computação em nuvem trazem gráficos quase fotorrealistas a qualquer ecrã, dos telemóveis às salas de cinema.</div></div>
+      </div>
+      <div class="panel-row two">
+        <div class="panel">
+          <span class="tag">Ferramenta</span>
+          <h3>Motores de jogo</h3>
+          <p>Um "game engine" trata da física, da renderização e do som para que os criadores se concentrem na jogabilidade — a mesma lógica de reutilização que tornou o software mais acessível a mais gente.</p>
+        </div>
+        <div class="panel">
+          <span class="tag">Reviravolta</span>
+          <h3>A GPU sai dos jogos</h3>
+          <p>Desenhada para calcular milhões de pixels em paralelo, a GPU acabou por se revelar ideal para treinar redes neuronais — é, hoje, o motor físico por trás do "boom" da inteligência artificial.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="era" id="era-lang" data-num="6" data-label="Linguagens de programação">
+      <div class="era-head">
+        <span class="era-years">1957 — hoje</span>
+        <h2>Falar com a máquina: linguagens de programação</h2>
+      </div>
+      <p class="dek">O hardware dá poder de cálculo; as linguagens de programação dão-lhe instruções. Cada nova linguagem é, no fundo, uma tentativa de aproximar a forma como pensamos da forma como a máquina executa.</p>
+      <div class="ledger">
+        <div class="ledger-row"><div class="ledger-year">1957</div><div class="ledger-fact"><b>Fortran</b> — a primeira linguagem de alto nível amplamente usada, criada na IBM para cálculo científico; ainda hoje corre em simulações de engenharia.</div></div>
+        <div class="ledger-row"><div class="ledger-year">1958</div><div class="ledger-fact"><b>Lisp</b> — John McCarthy cria-a para investigação em IA; introduz ideias como a recursão que continuam centrais na programação atual.</div></div>
+        <div class="ledger-row"><div class="ledger-year">1959</div><div class="ledger-fact"><b>COBOL</b> — pensada para processamento de dados empresariais; décadas depois, ainda processa a maioria das transações bancárias mundiais.</div></div>
+        <div class="ledger-row"><div class="ledger-year">1972</div><div class="ledger-fact"><b>C</b> — Dennis Ritchie cria-a nos Bell Labs para escrever o Unix; torna-se a "língua franca" da programação de sistemas.</div></div>
+        <div class="ledger-row"><div class="ledger-year">1991</div><div class="ledger-fact"><b>Python</b> — Guido van Rossum prioriza a legibilidade do código sobre a velocidade de execução; décadas depois torna-se a linguagem de eleição da ciência de dados e da IA.</div></div>
+        <div class="ledger-row"><div class="ledger-year">1995</div><div class="ledger-fact"><b>Java</b> promete "escrever uma vez, correr em qualquer lado"; no mesmo ano, Brendan Eich escreve <b>JavaScript</b> em dez dias — torna-se a única linguagem nativa dos navegadores.</div></div>
+      </div>
+      <div class="panel-row two">
+        <div class="panel">
+          <span class="tag">Estilos de pensar</span>
+          <h3>Paradigmas de programação</h3>
+          <p>Imperativo (dar passos, como o C), orientado a objetos (organizar em "objetos" com estado, como Java), funcional (compor funções puras, como o Lisp) — a maioria das linguagens atuais mistura vários destes estilos.</p>
+        </div>
+        <div class="panel">
+          <span class="tag">Hoje</span>
+          <h3>Uma linguagem para cada tarefa</h3>
+          <p>JavaScript domina a web, Python lidera em IA e ciência de dados, C e C++ continuam a comandar hardware e jogos, e novas linguagens como Rust ou Go nascem para juntar segurança e desempenho na era da nuvem.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="era" id="era-5" data-num="7" data-label="Sistemas operativos">
+      <div class="era-head">
+        <span class="era-years">1969 — hoje</span>
+        <h2>O maestro invisível: sistemas operativos</h2>
+      </div>
+      <p class="dek">Um computador sem sistema operativo é só um monte de silício. É o SO que gere memória, ficheiros e programas — e a sua história corre em paralelo à do hardware.</p>
+      <div class="panel-row two">
+        <div class="panel">
+          <span class="tag">Fundação</span>
+          <h3>Unix (1969)</h3>
+          <p>Criado nos Bell Labs por Ken Thompson e Dennis Ritchie, o Unix introduz ideias que sobrevivem até hoje: ficheiros como conceito universal, o terminal, e um sistema construído em <b>C</b> — a linguagem que Ritchie também criou.</p>
+        </div>
+        <div class="panel">
+          <span class="tag">Ramificação</span>
+          <h3>MS-DOS → Windows</h3>
+          <p>A Microsoft licencia o MS-DOS à IBM em 1981; sobre ele constrói o Windows, que ainda hoje corre em mais PCs do que qualquer outro sistema.</p>
+        </div>
+      </div>
+      <div class="panel-row two">
+        <div class="panel">
+          <span class="tag">Linhagem Unix</span>
+          <h3>macOS e BSD</h3>
+          <p>O macOS assenta em Darwin, um núcleo derivado de BSD — outro ramo direto da árvore Unix — herdando a sua robustez para o mercado de consumo.</p>
+        </div>
+        <div class="panel">
+          <span class="tag">Bolso</span>
+          <h3>iOS e Android</h3>
+          <p>Em 2007 o iPhone traz um SO tátil derivado do macOS; em 2008 o Android, baseado no núcleo Linux, torna-se o SO mais instalado do planeta.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="era" id="era-6" data-num="8" data-label="Software livre">
+      <div class="era-head">
+        <span class="era-years">1983 — hoje</span>
+        <h2>O movimento do código aberto</h2>
+      </div>
+      <p class="dek">Em paralelo à indústria comercial, cresce a ideia de que o código deve poder ser lido, alterado e partilhado por todos. É esse princípio que hoje sustenta grande parte da internet.</p>
+      <div class="ledger">
+        <div class="ledger-row"><div class="ledger-year">1983</div><div class="ledger-fact"><b>Projeto GNU</b> — Richard Stallman lança-o com o objetivo de criar um sistema operativo inteiramente livre.</div></div>
+        <div class="ledger-row"><div class="ledger-year">1989</div><div class="ledger-fact"><b>Licença GPL</b> — a "GNU General Public License" garante legalmente que o código livre continua livre em qualquer cópia ou derivação.</div></div>
+        <div class="ledger-row"><div class="ledger-year">1991</div><div class="ledger-fact"><b>Linux</b> — Linus Torvalds, então estudante finlandês, publica o núcleo que faltava ao projeto GNU. Hoje corre em servidores, supercomputadores, Android e na ISS.</div></div>
+        <div class="ledger-row"><div class="ledger-year">1998</div><div class="ledger-fact">Nasce o termo <b>"open source"</b> e a Netscape liberta o código do seu navegador, dando origem à Mozilla e ao Firefox.</div></div>
+      </div>
+      <div class="chiplist" aria-label="Aplicações open source populares">
+        <span class="chip">Linux (Ubuntu, Fedora, Debian)</span>
+        <span class="chip">LibreOffice</span>
+        <span class="chip">GIMP</span>
+        <span class="chip">Blender</span>
+        <span class="chip">Firefox</span>
+        <span class="chip">Apache / Nginx</span>
+        <span class="chip">VLC</span>
+        <span class="chip">Python</span>
+        <span class="chip">WordPress</span>
+        <span class="chip">Git</span>
+      </div>
+    </section>
+
+    <section class="era" id="era-protocols" data-num="9" data-label="Redes e protocolos">
+      <div class="era-head">
+        <span class="era-years">1961 — hoje</span>
+        <h2>As regras que ligam os computadores</h2>
+      </div>
+      <p class="dek">Antes de qualquer página web ou e-mail poder viajar entre continentes, foi preciso combinar como é que dois computadores desconhecidos conseguem "falar" um com o outro. Esse acordo silencioso chama-se protocolo.</p>
+      <div class="ledger">
+        <div class="ledger-row"><div class="ledger-year">1961–64</div><div class="ledger-fact"><b>Comutação de pacotes</b> — Paul Baran e Donald Davies propõem, cada um por si, dividir a informação em pequenos "pacotes" que viajam por caminhos independentes até serem remontados no destino.</div></div>
+        <div class="ledger-row"><div class="ledger-year">1973</div><div class="ledger-fact"><b>Ethernet</b> — Bob Metcalfe, na Xerox PARC, cria o padrão que ainda hoje liga computadores por cabo dentro de escritórios e casas.</div></div>
+        <div class="ledger-row"><div class="ledger-year">1974</div><div class="ledger-fact"><b>TCP/IP</b> — Vint Cerf e Bob Kahn publicam o conjunto de regras que permite ligar redes diferentes entre si; é o protocolo que dá o nome à "internet" (inter-networking).</div></div>
+        <div class="ledger-row"><div class="ledger-year">1983</div><div class="ledger-fact">No chamado <b>"flag day"</b>, a ARPANET muda-se por completo para TCP/IP; no mesmo ano nasce o <b>DNS</b>, a "lista telefónica" que traduz nomes como exemplo.com em endereços numéricos.</div></div>
+        <div class="ledger-row"><div class="ledger-year">2012–26</div><div class="ledger-fact">Com os endereços <b>IPv4</b> esgotados, a adoção do <b>IPv6</b> acelera para dar um endereço único a cada um dos milhares de milhões de dispositivos ligados à IoT.</div></div>
+      </div>
+      <div class="panel-row two">
+        <div class="panel">
+          <span class="tag">Organização</span>
+          <h3>Comunicação em camadas</h3>
+          <p>O modelo OSI, com sete camadas, e o modelo TCP/IP, mais simples, descrevem a mesma ideia: cada camada trata de um problema (endereçamento, transporte, aplicação) sem precisar de saber como as outras funcionam.</p>
+        </div>
+        <div class="panel">
+          <span class="tag">Endereçamento</span>
+          <h3>Do nome ao número</h3>
+          <p>Escrever um nome no navegador desencadeia uma consulta DNS que devolve um endereço IP — só depois desse passo invisível é que o pedido chega efetivamente ao servidor certo.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="era" id="era-7" data-num="10" data-label="Rede">
+      <div class="era-head">
+        <span class="era-years">1969 — 2007</span>
+        <h2>A internet e a teia mundial</h2>
+      </div>
+      <p class="dek">Computadores isolados são úteis; computadores ligados entre si mudam a civilização.</p>
+      <div class="ledger">
+        <div class="ledger-row"><div class="ledger-year">1969</div><div class="ledger-fact"><b>ARPANET</b> — a primeira mensagem entre computadores é enviada entre a UCLA e Stanford; a rede que dará origem à internet.</div></div>
+        <div class="ledger-row"><div class="ledger-year">1989</div><div class="ledger-fact"><b>World Wide Web</b> — Tim Berners-Lee propõe, no CERN, um sistema de documentos ligados por hiperligações: HTTP, HTML e o primeiro navegador.</div></div>
+        <div class="ledger-row"><div class="ledger-year">1998</div><div class="ledger-fact"><b>Google</b> nasce numa garagem para organizar a informação de uma web que já crescia depressa demais para os índices manuais.</div></div>
+        <div class="ledger-row"><div class="ledger-year">2007</div><div class="ledger-fact"><b>iPhone</b> — a internet sai da secretária e entra no bolso; nasce a era da computação móvel.</div></div>
+      </div>
+    </section>
+
+    <section class="era" id="era-8" data-num="11" data-label="Nuvem e mobilidade">
+      <div class="era-head">
+        <span class="era-years">2007 — 2020</span>
+        <h2>A nuvem pessoal e o fim do disco rígido como limite</h2>
+      </div>
+      <p class="dek">Os ficheiros deixam de estar presos à máquina que temos à frente — passam a viver algures na internet, acessíveis a partir de qualquer ecrã. O capítulo seguinte mostra a mesma mudança a acontecer, em maior escala, dentro das empresas.</p>
+      <div class="panel-row two">
+        <div class="panel">
+          <span class="tag">No bolso de cada um</span>
+          <h3>A nuvem pessoal</h3>
+          <p>Dropbox (2007), iCloud (2011) e Google Drive tornam banal guardar fotos, documentos e músicas "algures" na internet, sincronizados automaticamente entre o telemóvel, o portátil e o tablet.</p>
+        </div>
+        <div class="panel">
+          <span class="tag">Ecrã de bolso</span>
+          <h3>Apps e smartphones</h3>
+          <p>A App Store (2008) e a Google Play criam um novo modelo de distribuição de software, mais próximo do utilizador do que qualquer CD-ROM alguma vez esteve.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="era" id="era-cloud-biz" data-num="12" data-label="Nuvem empresarial">
+      <div class="era-head">
+        <span class="era-years">1999 — hoje</span>
+        <h2>A nuvem entra nas empresas</h2>
+      </div>
+      <p class="dek">Se o capítulo anterior mostrou a nuvem a chegar ao bolso de cada pessoa, este mostra-a a substituir, empresa a empresa, as salas cheias de servidores próprios — e, com isso, a mudar a forma como qualquer negócio compra e gere o seu software.</p>
+      <div class="ledger">
+        <div class="ledger-row"><div class="ledger-year">1999</div><div class="ledger-fact"><b>Salesforce</b> lança-se com o lema "no software", vendendo acesso a uma aplicação de gestão de clientes por assinatura em vez de licenças instaladas — nasce o modelo <b>SaaS</b> em grande escala.</div></div>
+        <div class="ledger-row"><div class="ledger-year">2006</div><div class="ledger-fact">A Amazon abre ao público o <b>EC2</b> e o <b>S3</b>: qualquer empresa passa a poder alugar servidores e armazenamento por hora, sem comprar hardware próprio — nasce o modelo <b>IaaS</b>.</div></div>
+        <div class="ledger-row"><div class="ledger-year">2010</div><div class="ledger-fact">Chegam o <b>Microsoft Azure</b> e o <b>Google Cloud</b>, transformando a nuvem empresarial num mercado de três grandes fornecedores concorrentes.</div></div>
+        <div class="ledger-row"><div class="ledger-year">2011</div><div class="ledger-fact">O instituto norte-americano <b>NIST</b> formaliza as definições de <b>IaaS, PaaS e SaaS</b> que a indústria ainda hoje usa para descrever os diferentes níveis de serviço na nuvem.</div></div>
+        <div class="ledger-row"><div class="ledger-year">2015–20</div><div class="ledger-fact">Grandes fabricantes de ERP e software empresarial migram os seus produtos para a nuvem; a pandemia de 2020 acelera de forma brusca a adoção do trabalho e da gestão remota baseados em nuvem.</div></div>
+      </div>
+      <div class="panel-row two">
+        <div class="panel">
+          <span class="tag">Os três modelos</span>
+          <h3>IaaS, PaaS e SaaS</h3>
+          <p><b>IaaS</b> aluga a infraestrutura (servidores, rede); <b>PaaS</b> acrescenta a plataforma onde correr aplicações; <b>SaaS</b> entrega a aplicação já pronta a usar — como um sistema de gestão empresarial acedido pelo navegador, sem instalar nada.</p>
+        </div>
+        <div class="panel">
+          <span class="tag">Porquê migrar</span>
+          <h3>Capex vira Opex</h3>
+          <p>Em vez de comprar servidores que envelhecem, a empresa paga apenas pelo que usa e ajusta a capacidade conforme a procura — elasticidade que seria impensável manter numa sala de servidores própria.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="era" id="era-bigdata" data-num="13" data-label="Big data e ciência de dados">
+      <div class="era-head">
+        <span class="era-years">1997 — hoje</span>
+        <h2>Big data: quando a informação passa a ser matéria-prima</h2>
+      </div>
+      <p class="dek">A nuvem deu lugar onde guardar dados a uma escala nunca vista; faltava saber o que fazer com eles. Este capítulo é o elo que falta entre "temos milhões de registos" e "temos um modelo de IA que aprende com eles".</p>
+      <div class="ledger">
+        <div class="ledger-row"><div class="ledger-year">1997</div><div class="ledger-fact">Investigadores da NASA usam pela primeira vez, por escrito, o termo <b>"big data"</b> para descrever conjuntos de dados grandes demais para as ferramentas da época.</div></div>
+        <div class="ledger-row"><div class="ledger-year">2004</div><div class="ledger-fact">A Google publica o artigo sobre <b>MapReduce</b>, um método para processar enormes volumes de dados distribuindo o trabalho por milhares de computadores em simultâneo.</div></div>
+        <div class="ledger-row"><div class="ledger-year">2006</div><div class="ledger-fact"><b>Hadoop</b> — Doug Cutting implementa as ideias da Google em código aberto e dá-lhe o nome do elefante de peluche do filho; torna-se o motor do big data na década seguinte.</div></div>
+        <div class="ledger-row"><div class="ledger-year">2008</div><div class="ledger-fact">DJ Patil e Jeff Hammerbacher cunham o termo <b>"cientista de dados"</b> para descrever uma nova função, a meio caminho entre estatística, programação e conhecimento de negócio.</div></div>
+        <div class="ledger-row"><div class="ledger-year">2014</div><div class="ledger-fact"><b>Apache Spark</b> ultrapassa o Hadoop MapReduce ao processar dados na memória em vez do disco, tornando a análise até cem vezes mais rápida.</div></div>
+      </div>
+      <div class="panel-row two">
+        <div class="panel">
+          <span class="tag">Definição clássica</span>
+          <h3>Os três V's</h3>
+          <p><b>Volume</b> (quantidade), <b>velocidade</b> (rapidez de chegada) e <b>variedade</b> (texto, imagem, sensores) — a fórmula de 2001 que ainda hoje resume o que torna um conjunto de dados "big data".</p>
+        </div>
+        <div class="panel">
+          <span class="tag">O elo seguinte</span>
+          <h3>Combustível para a IA</h3>
+          <p>Os "data lakes" que armazenam dados em bruto tornaram-se a matéria-prima do treino de modelos de IA: sem big data organizado e acessível, não há grandes modelos de linguagem para treinar.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="era" id="era-9" data-num="14" data-label="Inteligência artificial">
+      <div class="era-head">
+        <span class="era-years">1956 — hoje</span>
+        <h2>A era da inteligência artificial</h2>
+      </div>
+      <p class="dek">A ideia de máquinas que "pensam" é tão antiga quanto a própria computação — mas só nos últimos anos, com dados massivos e poder de cálculo abundante, ela deixou os laboratórios e entrou no dia a dia.</p>
+      <div class="ledger">
+        <div class="ledger-row"><div class="ledger-year">1956</div><div class="ledger-fact"><b>Conferência de Dartmouth</b> — cunha-se o termo "inteligência artificial"; nasce o campo académico.</div></div>
+        <div class="ledger-row"><div class="ledger-year">1997</div><div class="ledger-fact"><b>Deep Blue</b> (IBM) derrota o campeão mundial de xadrez Garry Kasparov.</div></div>
+        <div class="ledger-row"><div class="ledger-year">2012</div><div class="ledger-fact"><b>AlexNet</b> mostra que redes neuronais profundas, treinadas em GPUs, superam largamente os métodos anteriores de visão computacional — início do "boom" do deep learning.</div></div>
+        <div class="ledger-row"><div class="ledger-year">2017</div><div class="ledger-fact">O artigo <b>"Attention Is All You Need"</b> introduz a arquitetura <i>Transformer</i>, base de todos os grandes modelos de linguagem atuais.</div></div>
+        <div class="ledger-row"><div class="ledger-year">2022–26</div><div class="ledger-fact"><b>IA generativa</b> chega ao público: ChatGPT, Claude e outros assistentes de linguagem, geradores de imagem e de código tornam-se ferramentas do quotidiano.</div></div>
+      </div>
+      <p class="dek" style="margin-top:1rem">O ciclo fecha-se de forma curiosa: assim como o tear de Jacquard "programava" padrões com cartões perfurados, os modelos de IA de hoje aprendem os seus próprios "padrões" a partir de dados — só que agora medidos em milhares de milhões de parâmetros.</p>
+    </section>
+
+    <section class="era" id="era-ai-ethics" data-num="15" data-label="Ética e privacidade em IA">
+      <div class="era-head">
+        <span class="era-years">1942 — hoje</span>
+        <h2>Quando a máquina decide: ética e privacidade em IA</h2>
+      </div>
+      <p class="dek">O capítulo anterior mostrou a IA a tornar-se ferramenta do quotidiano; este mostra o preço a pagar por isso — vieses herdados dos dados, decisões automatizadas difíceis de explicar e a questão de quem realmente controla a informação que treina estes sistemas.</p>
+      <div class="ledger">
+        <div class="ledger-row"><div class="ledger-year">1942</div><div class="ledger-fact">Isaac Asimov publica as <b>Três Leis da Robótica</b> num conto de ficção científica — décadas antes de existir IA real, já se debatia como limitar o poder de decisão das máquinas.</div></div>
+        <div class="ledger-row"><div class="ledger-year">2016</div><div class="ledger-fact">O chatbot <b>Tay</b>, da Microsoft, é retirado do Twitter menos de 24 horas depois de lançado, após aprender e reproduzir linguagem ofensiva a partir das interações com utilizadores.</div></div>
+        <div class="ledger-row"><div class="ledger-year">2018</div><div class="ledger-fact">O estudo <b>Gender Shades</b>, de Joy Buolamwini, revela que sistemas comerciais de reconhecimento facial erram muito mais em mulheres de pele escura do que em homens de pele clara.</div></div>
+        <div class="ledger-row"><div class="ledger-year">2018</div><div class="ledger-fact">O escândalo <b>Cambridge Analytica</b> expõe como dados de milhões de utilizadores do Facebook foram usados, sem consentimento claro, para moldar campanhas políticas com apoio algorítmico.</div></div>
+        <div class="ledger-row"><div class="ledger-year">2024</div><div class="ledger-fact">Entra em vigor o <b>AI Act</b> da União Europeia, a primeira lei abrangente a regular sistemas de IA consoante o seu nível de risco para as pessoas.</div></div>
+      </div>
+      <div class="panel-row two">
+        <div class="panel">
+          <span class="tag">O problema</span>
+          <h3>Viés e transparência</h3>
+          <p>Um modelo aprende os padrões — e os preconceitos — dos dados com que foi treinado. Quando a decisão de um algoritmo afeta um crédito bancário ou uma candidatura de emprego, saber explicar o "porquê" torna-se tão importante como o resultado em si.</p>
+        </div>
+        <div class="panel">
+          <span class="tag">A pergunta em aberto</span>
+          <h3>De quem são os dados de treino</h3>
+          <p>Textos, imagens e código usados para treinar modelos de IA generativa foram, na sua maioria, recolhidos da internet sem pedir autorização individual a cada autor — uma tensão entre inovação e direitos de autor ainda por resolver nos tribunais de vários países.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="era" id="era-green" data-num="16" data-label="Computação verde">
+      <div class="era-head">
+        <span class="era-years">1992 — hoje</span>
+        <h2>O custo energético de um mundo digital</h2>
+      </div>
+      <p class="dek">Cada pesquisa, cada vídeo em streaming e cada resposta de um modelo de IA consome eletricidade algures num centro de dados. À medida que a computação se tornou onipresente, também se tornou um dos maiores desafios energéticos do planeta.</p>
+      <div class="ledger">
+        <div class="ledger-row"><div class="ledger-year">1992</div><div class="ledger-fact">A Agência de Proteção Ambiental dos EUA lança o <b>Energy Star</b>, o primeiro selo de eficiência energética amplamente adotado para computadores e monitores.</div></div>
+        <div class="ledger-row"><div class="ledger-year">2007</div><div class="ledger-fact">Nasce o consórcio <b>Green Grid</b> e populariza-se o <b>PUE</b> (Power Usage Effectiveness), a métrica que mede quanta energia de um centro de dados vai realmente para o processamento em vez de para arrefecimento e perdas.</div></div>
+        <div class="ledger-row"><div class="ledger-year">2011</div><div class="ledger-fact">O relatório <b>"How Clean is Your Cloud"</b>, da Greenpeace, pressiona publicamente as grandes tecnológicas a revelarem e reduzirem a pegada de carbono dos seus centros de dados.</div></div>
+        <div class="ledger-row"><div class="ledger-year">2014–20</div><div class="ledger-fact">Google, Microsoft e outras tecnológicas assumem compromissos de neutralidade e, mais tarde, de <b>carbono negativo</b>, comprando energia renovável equivalente a todo o consumo das suas operações.</div></div>
+        <div class="ledger-row"><div class="ledger-year">2023–26</div><div class="ledger-fact">O treino de grandes modelos de IA generativa expõe um novo problema: o consumo elétrico — e de água para arrefecimento — de centros de dados dedicados à IA dispara, reacendendo o debate sobre sustentabilidade digital.</div></div>
+      </div>
+      <div class="panel-row two">
+        <div class="panel">
+          <span class="tag">Como se mede</span>
+          <h3>PUE e eficiência</h3>
+          <p>Um PUE de 1,0 significaria que toda a energia de um centro de dados vai para computação, sem desperdício; a maioria dos centros de dados modernos ronda 1,1 a 1,5, muito abaixo dos 2,0 ou mais comuns há duas décadas.</p>
+        </div>
+        <div class="panel">
+          <span class="tag">Tensão atual</span>
+          <h3>O apetite da IA</h3>
+          <p>Treinar um único grande modelo de linguagem pode consumir tanta eletricidade como centenas de casas num ano inteiro — obrigando a indústria a investir em chips mais eficientes, arrefecimento líquido e energia renovável dedicada.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="era" id="era-a11y" data-num="17" data-label="Acessibilidade">
+      <div class="era-head">
+        <span class="era-years">1808 — hoje</span>
+        <h2>Computação para todas as pessoas</h2>
+      </div>
+      <p class="dek">A vontade de tornar a tecnologia utilizável por quem tem limitações visuais, auditivas, motoras ou cognitivas é tão antiga quanto a própria engenharia — e continua a moldar como todos usamos os nossos dispositivos, com ou sem deficiência.</p>
+      <div class="ledger">
+        <div class="ledger-row"><div class="ledger-year">1808</div><div class="ledger-fact">Pellegrino Turri constrói, para uma amiga cega, uma das primeiras máquinas de escrever conhecidas — muito antes de existir qualquer computador, a acessibilidade já impulsionava a invenção.</div></div>
+        <div class="ledger-row"><div class="ledger-year">1975</div><div class="ledger-fact">Ray Kurzweil cria a <b>Kurzweil Reading Machine</b>, o primeiro dispositivo capaz de ler texto impresso em voz alta para pessoas cegas.</div></div>
+        <div class="ledger-row"><div class="ledger-year">1986</div><div class="ledger-fact">Surgem os primeiros <b>leitores de ecrã</b> comerciais para PC, convertendo o que aparece no monitor em voz ou em braille.</div></div>
+        <div class="ledger-row"><div class="ledger-year">1990</div><div class="ledger-fact">Nos EUA, o <b>Americans with Disabilities Act</b> obriga tecnologia e espaços públicos a serem acessíveis — pressão legal que acelera a acessibilidade digital.</div></div>
+        <div class="ledger-row"><div class="ledger-year">1999</div><div class="ledger-fact">O W3C publica as <b>WCAG</b> (Web Content Accessibility Guidelines), o padrão internacional ainda hoje usado para avaliar se um site é acessível.</div></div>
+        <div class="ledger-row"><div class="ledger-year">2009</div><div class="ledger-fact">A Apple integra o <b>VoiceOver</b> no iPhone: pela primeira vez, um smartphone de ecrã tátil torna-se totalmente operável por uma pessoa cega.</div></div>
+      </div>
+      <div class="panel-row two">
+        <div class="panel">
+          <span class="tag">Princípio</span>
+          <h3>Design universal</h3>
+          <p>Legendas, que ajudam quem é surdo, também ajudam quem vê um vídeo sem som numa sala de espera; um bom contraste de cores ajuda quem tem baixa visão e quem usa o ecrã ao sol. A acessibilidade bem feita melhora a experiência de todos.</p>
+        </div>
+        <div class="panel">
+          <span class="tag">Nova fronteira</span>
+          <h3>IA como assistente pessoal</h3>
+          <p>Legendas automáticas em tempo real, descrição de imagens por visão computacional e controlo total por voz — as mesmas técnicas de IA do capítulo anterior estão hoje a tornar a tecnologia mais inclusiva do que alguma vez foi.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="era" id="era-robotics" data-num="18" data-label="Robótica e automação">
+      <div class="era-head">
+        <span class="era-years">1921 — hoje</span>
+        <h2>Quando o software ganha um corpo</h2>
+      </div>
+      <p class="dek">Até aqui, quase tudo o que vimos processa informação. A robótica é o capítulo em que a computação sai do ecrã e passa a mover-se, agarrar e agir fisicamente no mundo.</p>
+      <div class="ledger">
+        <div class="ledger-row"><div class="ledger-year">1921</div><div class="ledger-fact">O escritor checo <b>Karel Čapek</b> cunha a palavra "robot" na peça <i>R.U.R.</i>, a partir de "robota" (trabalho forçado, em checo) — décadas antes de existir qualquer computador.</div></div>
+        <div class="ledger-row"><div class="ledger-year">1961</div><div class="ledger-fact"><b>Unimate</b>, desenhado por George Devol, é instalado numa fábrica da General Motors — o primeiro robô industrial em produção, a soldar peças de automóveis.</div></div>
+        <div class="ledger-row"><div class="ledger-year">1970</div><div class="ledger-fact"><b>Shakey</b>, do Stanford Research Institute, é o primeiro robô móvel capaz de raciocinar sobre as suas próprias ações em vez de apenas seguir instruções fixas.</div></div>
+        <div class="ledger-row"><div class="ledger-year">1997</div><div class="ledger-fact">O rover <b>Sojourner</b> pousa em Marte e opera de forma semiautónoma a milhões de quilómetros de qualquer comando humano em tempo real.</div></div>
+        <div class="ledger-row"><div class="ledger-year">2000</div><div class="ledger-fact">A Honda apresenta o <b>ASIMO</b>, um dos primeiros robôs humanoides capazes de andar, subir escadas e reconhecer pessoas.</div></div>
+        <div class="ledger-row"><div class="ledger-year">2020–26</div><div class="ledger-fact">Robôs de armazém, veículos autónomos e humanoides como os da Boston Dynamics passam a usar modelos de IA para perceber o ambiente e decidir ações em tempo real — a chamada "IA encarnada".</div></div>
+      </div>
+      <div class="panel-row two">
+        <div class="panel">
+          <span class="tag">No dia a dia</span>
+          <h3>Automação além da fábrica</h3>
+          <p>Da linha de montagem aos robôs aspiradores, passando pela <b>RPA</b> — robôs puramente em software que preenchem formulários ou movem dados entre sistemas — a automação já não se limita a braços mecânicos.</p>
+        </div>
+        <div class="panel">
+          <span class="tag">Convergência</span>
+          <h3>IA encarnada</h3>
+          <p>Os mesmos modelos de linguagem e visão computacional do capítulo da IA estão agora a dar a robôs a capacidade de entender instruções em linguagem natural e agir sobre elas no mundo físico.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="era" id="era-mobile-iot" data-num="19" data-label="Móvel e IoT">
+      <div class="era-head">
+        <span class="era-years">1999 — hoje</span>
+        <h2>Computação móvel e a Internet das Coisas</h2>
+      </div>
+      <p class="dek">O capítulo da nuvem tirou o processamento da secretária; este leva-o mais longe — para o pulso, para a casa e para milhares de milhões de objetos do quotidiano que, sem darmos por isso, se tornaram pequenos computadores ligados em rede.</p>
+      <div class="ledger">
+        <div class="ledger-row"><div class="ledger-year">1999</div><div class="ledger-fact">O termo <b>"Internet of Things"</b> é cunhado por Kevin Ashton, então investigador do MIT, a propósito de etiquetas RFID que permitiam a objetos "falar" com sistemas informáticos.</div></div>
+        <div class="ledger-row"><div class="ledger-year">2007</div><div class="ledger-fact">O <b>iPhone</b> populariza o smartphone como plataforma de sensores — GPS, acelerómetro, câmara — abrindo caminho a aplicações que "leem" o mundo físico.</div></div>
+        <div class="ledger-row"><div class="ledger-year">2011</div><div class="ledger-fact">Ultrapassa-se um marco simbólico: pela primeira vez há mais dispositivos móveis ligados à internet do que computadores de secretária.</div></div>
+        <div class="ledger-row"><div class="ledger-year">2014–15</div><div class="ledger-fact">Explosão dos <b>wearables e da casa inteligente</b> — Apple Watch, colunas inteligentes e termóstatos conectados trazem a IoT para dentro de casa.</div></div>
+        <div class="ledger-row"><div class="ledger-year">2019–26</div><div class="ledger-fact">As redes <b>5G</b> e a <b>computação de periferia (edge computing)</b> permitem processar dados junto do sensor, reduzindo a latência de fábricas, veículos autónomos e cidades inteligentes.</div></div>
+      </div>
+      <div class="panel-row two">
+        <div class="panel">
+          <span class="tag">No bolso</span>
+          <h3>Computação móvel</h3>
+          <p>Um smartphone atual tem mais poder de cálculo do que os computadores que enviaram o Apollo 11 à Lua — mas o que o distingue não é só a potência, é estar sempre ligado, sempre com sensores a captar contexto.</p>
+        </div>
+        <div class="panel">
+          <span class="tag">À volta de nós</span>
+          <h3>Internet das Coisas</h3>
+          <p>De sensores agrícolas a monitores de saúde, passando por semáforos e contadores elétricos, estima-se que já existam mais dispositivos IoT ligados do que pessoas no planeta.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="era" id="era-cyber" data-num="20" data-label="Cibersegurança">
+      <div class="era-head">
+        <span class="era-years">1971 — hoje</span>
+        <h2>Cibersegurança: a corrida armamentista invisível</h2>
+      </div>
+      <p class="dek">Assim que os computadores se ligaram em rede, alguém tentou entrar onde não era convidado. A história da segurança informática é a história de uma tensão constante entre quem defende sistemas e quem procura falhas neles.</p>
+      <div class="ledger">
+        <div class="ledger-row"><div class="ledger-year">1971</div><div class="ledger-fact"><b>Creeper</b> — programa experimental que se copiava entre computadores da ARPANET exibindo "I'm the creeper, catch me if you can"; é considerado o primeiro "vírus".</div></div>
+        <div class="ledger-row"><div class="ledger-year">1977</div><div class="ledger-fact"><b>RSA</b> — Rivest, Shamir e Adleman publicam o algoritmo de criptografia de chave pública que ainda hoje protege compras online e ligações HTTPS.</div></div>
+        <div class="ledger-row"><div class="ledger-year">1988</div><div class="ledger-fact"><b>Worm de Morris</b> — o primeiro worm a espalhar-se de forma descontrolada pela internet, derrubando cerca de 10% dos computadores então ligados.</div></div>
+        <div class="ledger-row"><div class="ledger-year">2010</div><div class="ledger-fact"><b>Stuxnet</b> — considerado a primeira "arma cibernética", sabota centrifugadoras nucleares iranianas através de código malicioso altamente direcionado.</div></div>
+        <div class="ledger-row"><div class="ledger-year">2017</div><div class="ledger-fact"><b>WannaCry</b> — ransomware que explora uma falha do Windows e paralisa hospitais, empresas e serviços públicos em mais de 150 países num só fim de semana.</div></div>
+        <div class="ledger-row"><div class="ledger-year">2018</div><div class="ledger-fact"><b>RGPD</b> entra em vigor na Europa, obrigando empresas a proteger e a prestar contas sobre os dados pessoais que tratam.</div></div>
+      </div>
+      <div class="panel-row two">
+        <div class="panel">
+          <span class="tag">Defesa</span>
+          <h3>Criptografia e autenticação</h3>
+          <p>De chaves simétricas a chaves públicas, passando pela autenticação multifator, a segurança moderna assenta em tornar a informação ilegível — ou o acesso impossível — para quem não tem autorização.</p>
+        </div>
+        <div class="panel">
+          <span class="tag">Ataque</span>
+          <h3>Phishing e engenharia social</h3>
+          <p>A falha mais explorada raramente é técnica: é humana. E-mails e mensagens fraudulentas continuam a ser a porta de entrada mais comum para roubo de dados e ransomware.</p>
+        </div>
+      </div>
+      <p class="dek" style="margin-top:1rem">O capítulo seguinte junta-se a este de forma direta: os mesmos algoritmos de chave pública que protegem a internet hoje são precisamente aquilo que um computador quântico suficientemente poderoso poderia um dia quebrar.</p>
+    </section>
+
+    <section class="era" id="era-10" data-num="21" data-label="Computação quântica">
+      <div class="era-head">
+        <span class="era-years">1981 — hoje</span>
+        <h2>Computação quântica: o próximo salto de bit para qubit</h2>
+      </div>
+      <p class="dek">Todos os capítulos anteriores partilham a mesma base: o bit, que vale sempre 0 ou 1. A computação quântica propõe outra unidade — o <b>qubit</b> — que explora fenómenos da física quântica para representar e processar informação de forma fundamentalmente diferente.</p>
+      <div class="ledger">
+        <div class="ledger-row"><div class="ledger-year">1981</div><div class="ledger-fact">O físico <b>Richard Feynman</b> argumenta, numa palestra célebre, que simular sistemas quânticos exige computadores que sejam eles próprios quânticos.</div></div>
+        <div class="ledger-row"><div class="ledger-year">1994</div><div class="ledger-fact"><b>Algoritmo de Shor</b> — Peter Shor mostra que um computador quântico poderia fatorizar números grandes exponencialmente mais depressa, ameaçando a criptografia usada até hoje.</div></div>
+        <div class="ledger-row"><div class="ledger-year">2019</div><div class="ledger-fact"><b>"Supremacia quântica"</b> — a Google anuncia que o seu processador Sycamore, com 53 qubits, completou em minutos uma tarefa que estimava levar milhares de anos a um supercomputador clássico.</div></div>
+        <div class="ledger-row"><div class="ledger-year">2023–26</div><div class="ledger-fact">IBM, Google, empresas europeias e chinesas competem para reduzir os erros dos qubits e escalar processadores para além do milhar de qubits, aproximando a tecnologia de aplicações reais.</div></div>
+      </div>
+      <div class="panel-row two">
+        <div class="panel">
+          <span class="tag">O princípio</span>
+          <h3>Sobreposição e emaranhamento</h3>
+          <p>Um qubit pode existir em sobreposição de 0 e 1 ao mesmo tempo, e dois qubits podem ficar emaranhados, partilhando um estado que nenhum bit clássico consegue reproduzir. É esta diferença que dá aos algoritmos quânticos o seu potencial.</p>
+        </div>
+        <div class="panel">
+          <span class="tag">O limite</span>
+          <h3>Ainda não substitui o PC</h3>
+          <p>Os qubits são extremamente frágeis e exigem temperaturas próximas do zero absoluto. Por agora, os computadores quânticos não substituem os clássicos — resolvem problemas muito específicos, como simulação molecular e otimização.</p>
+        </div>
+      </div>
+    </section>
+
+  </div>
+
+  <section aria-labelledby="glossary-h">
+    <h2 id="glossary-h" style="font-size:1.3rem;margin-top:2.2rem;">Glossário rápido — vira o cartão</h2>
+    <p class="dek">Clica em cada termo para veres a definição.</p>
+    <div class="cards-grid" id="flashcards"></div>
+  </section>
+
+  <section id="quiz">
+    <h2>Teste os teus conhecimentos</h2>
+    <p class="dek">Vinte perguntas para reveres o percurso, da Pascalina à computação quântica.</p>
+    <div id="quizList"></div>
+    <div class="quiz-score">
+      <span id="scoreText">Pontuação: 0 / 20</span>
+      <button type="button" id="resetQuiz">Recomeçar</button>
+    </div>
+  </section>
+</main>
+
+<footer>
+  Curso interativo de literacia digital · história da computação, sistemas operativos, software livre e inteligência artificial.
+</footer>
+
+<script>
+(function(){
+  var eras = Array.prototype.slice.call(document.querySelectorAll('.era'));
+  var navWrap = document.getElementById('eraNav');
+
+  eras.forEach(function(era, i){
+    var btn = document.createElement('button');
+    btn.className = 'era-btn';
+    btn.type = 'button';
+    btn.textContent = (i) + ' · ' + era.dataset.label;
+    btn.addEventListener('click', function(){
+      era.scrollIntoView({behavior:'smooth', block:'start'});
+    });
+    navWrap.appendChild(btn);
+  });
+  var navBtns = Array.prototype.slice.call(navWrap.children);
+
+  if('IntersectionObserver' in window){
+    var obs = new IntersectionObserver(function(entries){
+      entries.forEach(function(entry){
+        var idx = eras.indexOf(entry.target);
+        if(entry.isIntersecting){
+          entry.target.classList.add('in-view');
+          navBtns.forEach(function(b){b.classList.remove('active');});
+          if(navBtns[idx]) navBtns[idx].classList.add('active');
+        } else {
+          entry.target.classList.remove('in-view');
+        }
+      });
+    }, {rootMargin:'-15% 0px -70% 0px', threshold:0});
+    eras.forEach(function(era){obs.observe(era);});
+  }
+
+  // Flashcards
+  var terms = [
+    ['Bit', 'A menor unidade de informação, valendo 0 ou 1.', 'Contração de "binary digit", proposta em 1948 por John Tukey.'],
+    ['Kernel (núcleo)', 'O coração do sistema operativo.', 'Gere a memória, o processador e o acesso ao hardware; tudo o resto do SO corre "por cima" dele.'],
+    ['Open Source', 'Código-fonte aberto a qualquer pessoa.', 'Permite ler, alterar e redistribuir o software, geralmente sob licenças como a GPL ou a MIT.'],
+    ['Firmware', 'Software gravado diretamente no hardware.', 'Faz a ponte entre os circuitos físicos e o sistema operativo — por exemplo, a BIOS/UEFI de um PC.'],
+    ['GUI', 'Interface Gráfica de Utilizador.', 'Substitui comandos de texto por janelas, ícones e menus; popularizada pela Xerox PARC e pela Apple.'],
+    ['Algoritmo', 'Uma sequência finita de passos para resolver um problema.', 'O conceito é tão antigo quanto a matemática — Ada Lovelace escreveu o primeiro pensado para uma máquina.'],
+    ['Cloud Computing', 'Processamento e armazenamento feitos em servidores remotos.', 'Permite usar poder de cálculo "como um serviço", pago consoante o uso, sem comprar hardware próprio.'],
+    ['Rede Neuronal', 'Modelo computacional inspirado no cérebro.', 'Camadas de "neurónios" artificiais que ajustam os seus pesos ao aprender a partir de exemplos.'],
+    ['Transformer', 'Arquitetura de IA introduzida em 2017.', 'Usa "atenção" para pesar a importância de cada palavra num texto; é a base dos modelos de linguagem atuais.'],
+    ['LLM', 'Modelo de Linguagem de Grande Escala.', 'Treinado em enormes quantidades de texto para prever e gerar linguagem — como o Claude ou o GPT.'],
+    ['Qubit', 'A unidade de informação da computação quântica.', 'Ao contrário do bit clássico, pode existir em sobreposição de 0 e 1 e ficar emaranhado com outros qubits.'],
+    ['IoT', 'Internet das Coisas — objetos físicos ligados em rede.', 'Sensores, eletrodomésticos e máquinas que recolhem e trocam dados pela internet, muitas vezes sem intervenção humana direta.'],
+    ['Ransomware', 'Software malicioso que sequestra dados.', 'Encripta os ficheiros da vítima e exige um pagamento — normalmente em criptomoeda — para os libertar.'],
+    ['Compilador', 'Programa que traduz código-fonte para código executável.', 'Converte a linguagem escrita pelo programador em instruções que o processador consegue correr diretamente — ao contrário de um interpretador, que executa linha a linha.'],
+    ['GPU', 'Unidade de Processamento Gráfico.', 'Feita para calcular milhões de pixels em paralelo; a mesma capacidade de paralelismo tornou-a essencial para treinar modelos de inteligência artificial.'],
+    ['TCP/IP', 'O conjunto de protocolos base da internet.', 'Define como a informação é dividida em pacotes, endereçada e entregue entre redes diferentes — é o que torna possível ligar milhões de redes distintas numa só "internet".'],
+    ['Data Lake', 'Um repositório de dados em bruto, de qualquer formato.', 'Ao contrário de um data warehouse tradicional e já organizado, guarda os dados tal como chegam, para serem estruturados só quando alguém — ou um modelo de IA — precisa deles.'],
+    ['WCAG', 'Web Content Accessibility Guidelines.', 'O padrão internacional do W3C, publicado em 1999, que define o que torna um site ou aplicação acessível a pessoas com diferentes tipos de deficiência.'],
+    ['RPA', 'Automação Robótica de Processos.', 'Software que imita ações humanas repetitivas — preencher formulários, copiar dados entre sistemas — sem qualquer braço mecânico envolvido; é "robótica" apenas em código.'],
+    ['SaaS', 'Software como Serviço.', 'Modelo em que a aplicação corre nos servidores do fornecedor e é acedida por assinatura, normalmente pelo navegador — sem instalação nem manutenção do lado da empresa cliente.'],
+    ['Viés algorítmico', 'Um erro sistemático herdado dos dados de treino.', 'Ocorre quando um modelo reproduz ou amplifica preconceitos presentes nos dados usados para o treinar, prejudicando de forma desigual certos grupos de pessoas.'],
+    ['PUE', 'Power Usage Effectiveness.', 'Mede quanta energia de um centro de dados é realmente usada em computação, contra a que se perde em arrefecimento e outras perdas; quanto mais próximo de 1,0, mais eficiente.']
+  ];
+  var cardsGrid = document.getElementById('flashcards');
+  terms.forEach(function(t){
+    var card = document.createElement('div');
+    card.className = 'flash';
+    card.innerHTML =
+      '<div class="flash-inner">' +
+        '<div class="flash-face front"><div class="term">' + t[0] + '</div><div class="hint">toca para ver ↻</div></div>' +
+        '<div class="flash-face back"><p>' + t[2] + '</p></div>' +
+      '</div>';
+    card.addEventListener('click', function(){ card.classList.toggle('flipped'); });
+    cardsGrid.appendChild(card);
+  });
+
+  // Quiz
+  var quiz = [
+    {q:'Quem é considerada a primeira programadora da história?', opts:['Grace Hopper','Ada Lovelace','Hedy Lamarr','Margaret Hamilton'], correct:1},
+    {q:'Que máquina da Segunda Guerra Mundial usava 18 mil válvulas?', opts:['Colossus','Zuse Z3','ENIAC','UNIVAC I'], correct:2},
+    {q:'Quem inventou o transístor em 1947?', opts:['Equipa dos Bell Labs','Steve Wozniak','Gordon Moore','Alan Turing'], correct:0},
+    {q:'Que empresa nasceu para escrever um interpretador BASIC para o Altair 8800?', opts:['Apple','IBM','Microsoft','Intel'], correct:2},
+    {q:'Quem lançou o núcleo Linux em 1991?', opts:['Richard Stallman','Linus Torvalds','Dennis Ritchie','Ken Thompson'], correct:1},
+    {q:'Em que sistema operativo assenta o macOS?', opts:['MS-DOS','Um derivado de BSD/Unix','Android','CP/M'], correct:1},
+    {q:'O que propôs Tim Berners-Lee em 1989 no CERN?', opts:['A internet','O microprocessador','A World Wide Web','O rato'], correct:2},
+    {q:'Que arquitetura, descrita em 2017, é a base dos grandes modelos de linguagem atuais?', opts:['CNN','Transformer','LSTM','Perceptrão'], correct:1},
+    {q:'Que fenómeno permite a um qubit representar 0 e 1 em simultâneo?', opts:['Emaranhamento','Sobreposição','Interferência ótica','Decoerência'], correct:1},
+    {q:'Quem cunhou o termo "Internet of Things" em 1999?', opts:['Kevin Ashton','Tim Berners-Lee','Steve Jobs','Vint Cerf'], correct:0},
+    {q:'Que algoritmo de 1977 é a base da criptografia de chave pública usada em HTTPS?', opts:['AES','RSA','SHA-256','DES'], correct:1},
+    {q:'Que linguagem foi escrita em apenas dez dias, em 1995, e se tornou a única nativa dos navegadores?', opts:['Java','Python','JavaScript','PHP'], correct:2},
+    {q:'Que jogo de 1993 popularizou o "first-person shooter" em 3D?', opts:['Pong','DOOM','Pac-Man','Tennis for Two'], correct:1},
+    {q:'Que serviço traduz um nome como "exemplo.com" no endereço IP correspondente?', opts:['DNS','Ethernet','TCP','HTTP'], correct:0},
+    {q:'A que se deve o nome do Hadoop, criado em 2006?', opts:['Um deus da mitologia grega','O elefante de peluche do filho de Doug Cutting','Um acrónimo técnico da Google','Uma cidade na Índia'], correct:1},
+    {q:'Em que ano a Apple integrou o VoiceOver no iPhone, tornando-o operável por pessoas cegas?', opts:['2001','2005','2009','2015'], correct:2},
+    {q:'De que palavra checa deriva o termo "robot", cunhado por Karel Čapek em 1921?', opts:['"robota" (trabalho forçado)','"robotnik" (operário)','Um acrónimo de laboratório','Do inglês "robust"'], correct:0},
+    {q:'Que empresa lançou em 1999 o lema "no software" e pioneirou o modelo SaaS em grande escala?', opts:['Salesforce','Amazon','Microsoft','Oracle'], correct:0},
+    {q:'O que revelou o estudo "Gender Shades", de Joy Buolamwini, em 2018?', opts:['Que a IA supera sempre humanos em xadrez','Que sistemas de reconhecimento facial erravam muito mais em mulheres de pele escura','Que os dados de treino da IA eram insuficientes','Que a IA generativa reduz o consumo de energia'], correct:1},
+    {q:'O que mede a métrica PUE num centro de dados?', opts:['A velocidade da rede','A eficiência energética, comparando o consumo total com o usado em computação','O número de servidores instalados','A temperatura média das salas de servidores'], correct:1}
+  ];
+  var quizList = document.getElementById('quizList');
+  var scoreText = document.getElementById('scoreText');
+  var score = 0, answered = 0;
+
+  function updateScore(){
+    scoreText.textContent = 'Pontuação: ' + score + ' / ' + quiz.length + (answered===quiz.length ? '  ·  completo!' : '');
+  }
+
+  function buildQuiz(){
+    quizList.innerHTML = '';
+    score = 0; answered = 0;
+    quiz.forEach(function(item, qi){
+      var card = document.createElement('div');
+      card.className = 'q-card';
+      var qText = document.createElement('div');
+      qText.className = 'q-text';
+      qText.textContent = (qi+1) + '. ' + item.q;
+      card.appendChild(qText);
+      var opts = document.createElement('div');
+      opts.className = 'q-opts';
+      item.opts.forEach(function(optText, oi){
+        var b = document.createElement('button');
+        b.type = 'button';
+        b.className = 'q-opt';
+        b.textContent = optText;
+        b.addEventListener('click', function(){
+          if(b.disabled) return;
+          var allOpts = opts.querySelectorAll('.q-opt');
+          allOpts.forEach(function(o){ o.disabled = true; });
+          if(oi === item.correct){
+            b.classList.add('correct');
+            score++;
+          } else {
+            b.classList.add('wrong');
+            allOpts[item.correct].classList.add('correct');
+          }
+          answered++;
+          updateScore();
+        });
+        opts.appendChild(b);
+      });
+      card.appendChild(opts);
+      quizList.appendChild(card);
+    });
+    updateScore();
+  }
+  buildQuiz();
+  document.getElementById('resetQuiz').addEventListener('click', buildQuiz);
+})();
+</script>
+</body>
+</html>
